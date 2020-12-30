@@ -17,7 +17,7 @@ input_folder=a.input
 save_to=""
 
 if(a.mode=="CVAT-VSM"):
-    save_to=inpu_folder.replace("IMG_DATA","S2CLOUDLESS_DATA")
+    save_to=input_folder.replace("IMG_DATA","S2CLOUDLESS_DATA")
     if(os.path.isdir(save_to)==False):
         os.makedirs(save_to)
         print("Created folder "+save_to)
