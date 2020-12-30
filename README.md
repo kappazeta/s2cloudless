@@ -1,6 +1,6 @@
 # s2cloudless
 
-S2cloudless is Sentinel Hub's cloud detector for Sentinel-2 imagery. It is a binary classifier (cloud and non-cloud). The output is prediction mask (binary) and probability map. The resolution of the output is 60m. S2cloudless was trained on L1C data it cannot perform well on L2A data.
+S2cloudless is Sentinel Hub's cloud detector for Sentinel-2 imagery. It is a binary classifier (cloud and non-cloud). The output is prediction mask (binary) and probability map, both in png format. The resolution of the output is 60m. S2cloudless was trained on L1C data it cannot perform well on L2A data.
 
 The script run_s2cloudless will run this cloud detector on a local L1C product.
 
