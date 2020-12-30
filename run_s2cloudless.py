@@ -6,8 +6,22 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import sys
 import os
+import argparse
 
-input_folder=sys.argv[1]  ## Input is path to the folder where the jp2 files of L1C product bands are located
+parser = argparse.ArgumentParser()
+parser.add_argument("--input", required=True, help="path to the folder where the jp2 files of the L1C product are located (IMG_DATA)")
+parser.add_argument("--mode", required=True,  choices=["validation", "CVAT-VSM"], help="validation: output images rescaled to 10980x10980px, mask output with pixel values 0 or 255, probability output with colormap. CVAT-VSM: output image dimensions 1830x1830px, mask output with pixel values 0 or 1, probabilty output as greyscaled.")
+a = parser.parse_args()
+
+input_folder=a.input
+save_to=""
+
+if(a.mode=="CVAT-VSM"):
+    save_to=inpu_folder.replace("IMG_DATA","S2CLOUDLESS_DATA")
+    if(os.path.isdir(save_to)==False):
+        os.makedirs(save_to)
+        print("Created folder "+save_to)
+
 
 #Check the name of the product in the folder
 
@@ -19,16 +33,24 @@ for filename in os.listdir(input_folder):
 def plot_cloud_mask(mask, figsize=(15, 15), fig=None):
     """
     Utility function for plotting a binary cloud mask.
-    """  
-    new_mask = [[255 if b==1 else b for b in i] for i in mask]
-    im_result = Image.fromarray(np.uint8(new_mask))
-    im_result=im_result.resize((10980,10980),Image.NEAREST)
-    im_result.save(identifier+"_s2cloudless_prediction.png")
-    
+    """ 
+    if(a.mode=="validation"): 
+        new_mask = [[255 if b==1 else b for b in i] for i in mask]
+        im_result = Image.fromarray(np.uint8(new_mask))
+        im_result=im_result.resize((10980,10980),Image.NEAREST)
+        im_result.save(identifier+"_s2cloudless_prediction.png")
+    else:
+        im_result = Image.fromarray(np.uint8(mask))
+        im.result.save(os.path.join(save_to,"s2cloudless_prediction.png"))
+
 def plot_probability_map(prob_map, figsize=(15, 15)):
-    plt.figure(figsize=figsize)
-    plt.imshow(prob_map, cmap=plt.cm.inferno)
-    plt.savefig(identifier+"_s2cloudless_probability.png")
+    if(a.mode=="validation"):
+        plt.figure(figsize=figsize)
+        plt.imshow(prob_map,cmap=plt.cm.inferno)
+        plt.savefig(identifier+"_s2cloudless_probability.png")
+    else:
+        im_result = Image.fromarray(np.uint8(prob_map))
+        im_result.save(os.path.join(save_to,"s2cloudless_probability.png"))       
 
 #Read in the bands and resample by B01 (60 m)
 
