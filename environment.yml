@@ -1,0 +1,14 @@
+name: s2cloudless
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.5
+  - numpy
+  - pillow
+  - rasterio
+  - matplotlib
+  - pip
+  - pip:
+    - s2cloudless
+
