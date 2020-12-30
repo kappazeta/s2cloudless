@@ -2,6 +2,8 @@ from s2cloudless import S2PixelCloudDetector
 import numpy as np
 import rasterio
 from rasterio.warp import reproject, Resampling
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from PIL import Image
 import sys
@@ -41,7 +43,7 @@ def plot_cloud_mask(mask, figsize=(15, 15), fig=None):
         im_result.save(identifier+"_s2cloudless_prediction.png")
     else:
         im_result = Image.fromarray(np.uint8(mask))
-        im.result.save(os.path.join(save_to,"s2cloudless_prediction.png"))
+        im_result.save(os.path.join(save_to,"s2cloudless_prediction.png"))
 
 def plot_probability_map(prob_map, figsize=(15, 15)):
     if(a.mode=="validation"):
@@ -49,7 +51,7 @@ def plot_probability_map(prob_map, figsize=(15, 15)):
         plt.imshow(prob_map,cmap=plt.cm.inferno)
         plt.savefig(identifier+"_s2cloudless_probability.png")
     else:
-        im_result = Image.fromarray(np.uint8(prob_map))
+        im_result = Image.fromarray(np.uint8(prob_map * 255))
         im_result.save(os.path.join(save_to,"s2cloudless_probability.png"))       
 
 #Read in the bands and resample by B01 (60 m)
