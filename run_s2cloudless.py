@@ -54,74 +54,57 @@ def plot_probability_map(prob_map, figsize=(15, 15)):
         im_result = Image.fromarray(np.uint8(prob_map * 255))
         im_result.save(os.path.join(save_to,"s2cloudless_probability.png"))       
 
-#Read in the bands and resample by B01 (60 m)
+#Resampling to achieve 10 m resolution:
 
-with rasterio.open(os.path.join(input_folder,identifier+"B01.jp2")) as scl:
-    B01=scl.read()
-    tmparr = np.empty_like(B01)
-    aff = scl.transform
+with rasterio.open(os.path.join(input_folder,identifier+"B01.jp2")) as dataset:
+    B01 = dataset.read(out_shape=(dataset.count,int(dataset.height * 6),int(dataset.width * 6)),resampling=Resampling.bilinear)                  
     print(B01.shape)
-    
-with rasterio.open(os.path.join(input_folder,identifier+"B02.jp2")) as scl:
-    B02=scl.read()    
-    reproject(B02, tmparr,src_transform = scl.transform,dst_transform = aff,src_crs = scl.crs,dst_crs = scl.crs,resampling = Resampling.bilinear)
-    B02 = tmparr
+
+with rasterio.open(os.path.join(input_folder,identifier+"B02.jp2")) as dataset:
+    B02 = dataset.read(out_shape=(dataset.count,int(dataset.height * 1),int(dataset.width * 1)),resampling=Resampling.bilinear)
     print(B02.shape)
     
-with rasterio.open(os.path.join(input_folder,identifier+"B04.jp2")) as scl:
-    B04=scl.read()
-    reproject(B04, tmparr,src_transform = scl.transform,dst_transform = aff,src_crs = scl.crs,dst_crs = scl.crs,resampling = Resampling.bilinear)
-    B04 = tmparr
+with rasterio.open(os.path.join(input_folder,identifier+"B04.jp2")) as dataset:
+    B04 = dataset.read(out_shape=(dataset.count,int(dataset.height * 1),int(dataset.width * 1)),resampling=Resampling.bilinear)
     print(B04.shape)
     
-with rasterio.open(os.path.join(input_folder,identifier+"B05.jp2")) as scl:
-    B05=scl.read()
-    reproject(B05, tmparr,src_transform = scl.transform,dst_transform = aff,src_crs = scl.crs,dst_crs = scl.crs,resampling = Resampling.bilinear)
-    B05 = tmparr
+with rasterio.open(os.path.join(input_folder,identifier+"B05.jp2")) as dataset:
+    B05 = dataset.read(out_shape=(dataset.count,int(dataset.height * 2),int(dataset.width * 2)),resampling=Resampling.bilinear)
     print(B05.shape)
     
-with rasterio.open(os.path.join(input_folder,identifier+"B08.jp2")) as scl:
-    B08=scl.read()
-    reproject(B08, tmparr,src_transform = scl.transform,dst_transform = aff,src_crs = scl.crs,dst_crs = scl.crs,resampling = Resampling.bilinear)
-    B08 = tmparr
+with rasterio.open(os.path.join(input_folder,identifier+"B08.jp2")) as dataset:
+    B08 = dataset.read(out_shape=(dataset.count,int(dataset.height * 1),int(dataset.width * 1)),resampling=Resampling.bilinear)
     print(B08.shape)
     
-with rasterio.open(os.path.join(input_folder,identifier+"B8A.jp2")) as scl:
-    B8A=scl.read()
-    reproject(B8A, tmparr,src_transform = scl.transform,dst_transform = aff,src_crs = scl.crs,dst_crs = scl.crs,resampling = Resampling.bilinear)
-    B8A = tmparr
+with rasterio.open(os.path.join(input_folder,identifier+"B8A.jp2")) as dataset:
+    B8A = dataset.read(out_shape=(dataset.count,int(dataset.height * 2),int(dataset.width * 2)),resampling=Resampling.bilinear)
     print(B8A.shape)
     
-with rasterio.open(os.path.join(input_folder,identifier+"B09.jp2")) as scl:
-    B09=scl.read()
+with rasterio.open(os.path.join(input_folder,identifier+"B09.jp2")) as dataset:
+    B09 = dataset.read(out_shape=(dataset.count,int(dataset.height * 6),int(dataset.width * 6)),resampling=Resampling.bilinear)
     print(B09.shape)
     
-with rasterio.open(os.path.join(input_folder,identifier+"B10.jp2")) as scl:
-    B10=scl.read()
-    print(B10.shape)  
+with rasterio.open(os.path.join(input_folder,identifier+"B10.jp2")) as dataset:
+    B10 = dataset.read(out_shape=(dataset.count,int(dataset.height * 6),int(dataset.width * 6)),resampling=Resampling.bilinear)
+    print(B10.shape)
     
-with rasterio.open(os.path.join(input_folder,identifier+"B11.jp2")) as scl:
-    B11=scl.read()
-    reproject(B11, tmparr,src_transform = scl.transform,dst_transform = aff,src_crs = scl.crs,dst_crs = scl.crs,resampling = Resampling.bilinear)
-    B11 = tmparr
+with rasterio.open(os.path.join(input_folder,identifier+"B11.jp2")) as dataset:
+    B11 = dataset.read(out_shape=(dataset.count,int(dataset.height * 2),int(dataset.width * 2)),resampling=Resampling.bilinear)
     print(B11.shape)
     
-with rasterio.open(os.path.join(input_folder,identifier+"B12.jp2")) as scl:
-    B12=scl.read()
-    reproject(B12, tmparr,src_transform = scl.transform,dst_transform = aff,src_crs = scl.crs,dst_crs = scl.crs,resampling = Resampling.bilinear)
-    B12 = tmparr
+with rasterio.open(os.path.join(input_folder,identifier+"B12.jp2")) as dataset:
+    B12 = dataset.read(out_shape=(dataset.count,int(dataset.height * 2),int(dataset.width * 2)),resampling=Resampling.bilinear)
     print(B12.shape)
-
 
 bands = np.array([np.dstack((B01[0]/10000.0,B02[0]/10000.0,B04[0]/10000.0,B05[0]/10000.0,B08[0]/10000.0,B8A[0]/10000.0,B09[0]/10000.0,B10[0]/10000.0,B11[0]/10000.0,B12[0]/10000.0))])
 
-cloud_detector = S2PixelCloudDetector(threshold=0.4, average_over=4, dilation_size=2)  #These are the recommended parameters for this resolution (60m)
+#Recommended parameters for 60 m resolution: average_over = 4, dilation_size=2
+#Recommended parameters for 10 m resolution: average_over=22, dilation_size=11
+#The actual best result is achievable by trying different values for different products.
+
+cloud_detector = S2PixelCloudDetector(threshold=0.4, average_over=22, dilation_size=11)  
 cloud_probs = cloud_detector.get_cloud_probability_maps(bands)
 mask = cloud_detector.get_cloud_masks(bands).astype(rasterio.uint8)
 
 plot_cloud_mask(mask[0])
 plot_probability_map(cloud_probs[0])
-
-
-
-
